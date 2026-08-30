@@ -1,0 +1,14 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: dataset_deal
+      POSTGRES_USER: dataset_deal
+      POSTGRES_PASSWORD: dataset_deal
+    ports:
+      - "${POSTGRES_PORT:-15432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dataset_deal -d dataset_deal"]
+      interval: 1s
+      timeout: 3s
+      retries: 30
