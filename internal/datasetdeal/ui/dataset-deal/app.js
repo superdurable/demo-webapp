@@ -78,14 +78,16 @@ async function renderRoute() {
 
 function currentRoute() {
   const parts = window.location.pathname.split('/').filter(Boolean);
-  if (parts[0] !== 'products' || parts[1] !== 'dataset-deal') {
-    return { kind: 'dashboard' };
+  // The standalone server mounts the app at the root; the playground mounts
+  // it under /products/dataset-deal. Accept both.
+  if (parts[0] === 'products' && parts[1] === 'dataset-deal') {
+    parts.splice(0, 2);
   }
-  if (parts[2] === 'processes' && parts[3]) {
-    return { kind: 'process', id: decodeURIComponent(parts.slice(3).join('/')) };
+  if (parts[0] === 'processes' && parts[1]) {
+    return { kind: 'process', id: decodeURIComponent(parts.slice(1).join('/')) };
   }
-  if (parts[2] === 'executions' && parts[3]) {
-    return { kind: 'execution', id: decodeURIComponent(parts.slice(3).join('/')) };
+  if (parts[0] === 'executions' && parts[1]) {
+    return { kind: 'execution', id: decodeURIComponent(parts.slice(1).join('/')) };
   }
   return { kind: 'dashboard' };
 }
